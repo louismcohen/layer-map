@@ -1,8 +1,7 @@
-import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { FaMagnifyingGlass, FaXmark } from 'react-icons/fa6';
 import { useSearchFilterStore } from '../stores/searchFilterStore';
-import { SearchFilter } from '../types/searchFilter';
+import ClearButton from './ClearButton';
 // import { useSearchFilterStore } from '../store/searchFilterStore';
 // import { SearchFilter } from '../types/searchFilter';
 // import {
@@ -11,33 +10,6 @@ import { SearchFilter } from '../types/searchFilter';
 // 	FilterMode,
 // 	FilterType,
 // } from '../types/searchFilter';
-
-const ClearButton = ({
-  searchTerm,
-  updateSearchTerm,
-}: Pick<SearchFilter, 'searchTerm' | 'updateSearchTerm'>) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.1 }}
-      onClick={() => searchTerm !== '' && updateSearchTerm('')}
-      className='w-fit h-[36px] flex flex-row items-center'
-    >
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        className={`w-[24px] h-[24px] flex justify-center items-center transition-all bg-neutral-400 rounded-full outline-none hover:outline-none hover:border-none focus:outline-none p-0 ${
-          searchTerm === ''
-            ? 'disabled opacity-50 cursor-default'
-            : ' hover:bg-neutral-500'
-        }`}
-      >
-        <FaXmark size={16} color={'white'} />
-      </motion.button>
-    </motion.div>
-  );
-};
 
 // interface FilterButtonProps {
 //   text: string;
@@ -183,7 +155,7 @@ const SearchBar = () => {
     <div className='absolute top-0 flex flex-col gap-2 justify-center items-center w-full p-4 pointer-events-none'>
       <div
         tabIndex={0}
-        className={`w-full max-w-[500px] pointer-events-auto hover:outline-2 hover:outline-offset-0 hover:outline-cyan-500 bg-gray-50/85 backdrop-blur-sm transition-all duration-300 flex justify-center items-center px-3 gap-2 rounded-lg overflow-hidden border border-neutral-500/10 outline ${
+        className={`w-full max-w-[500px] pointer-events-auto hover:outline-2 hover:outline-offset-0 hover:outline-cyan-500 bg-gray-50/85 backdrop-blur-sm transition-all duration-300 flex justify-center items-center px-3 gap-2 rounded-sm overflow-hidden border border-neutral-500/10 outline ${
           searchInputFocused
             ? 'outline-2 outline-offset-0 outline-cyan-500 bg-gray-50/90 backdrop-blur-md shadow-xl'
             : 'outline-none shadow-lg'

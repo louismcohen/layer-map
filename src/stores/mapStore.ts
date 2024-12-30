@@ -54,13 +54,14 @@ interface MapStoreActions {
 
 export type MapStore = MapStoreState & MapStoreActions;
 
-export const useMapStore = create<MapStore>((set) => ({
+export const useMapStore = create<MapStore>((set, get) => ({
   searchQuery: '',
   updateSearchQuery: (query: string) => {
     set(() => ({ searchQuery: query }));
   },
   layers: [],
   saveLayer: (name: string, places: Place[]) => {
+    console.log('in saveLayer', name, places);
     const validPlaces = places.filter((place) =>
       isValidCoordinate(place.latitude, place.longitude)
     );
@@ -70,8 +71,17 @@ export const useMapStore = create<MapStore>((set) => ({
       return;
     }
 
+    const id = Date.now().toString();
+
+    const existingLayer = get().layers.find((layer) => layer.id === id);
+
+    if (existingLayer) {
+      console.warn('Layer already exists');
+      return;
+    }
+
     const newLayer: Layer = {
-      id: Date.now().toString(),
+      id,
       name,
       color: `#${Math.floor(Math.random() * 16777215)
         .toString(16)

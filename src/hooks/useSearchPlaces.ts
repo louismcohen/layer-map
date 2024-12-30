@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { ViewState } from 'react-map-gl';
 import { SerperResponse } from '../types/serper';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useMapStore } from '../stores/mapStore';
 
 const searchPlaces = async (
   query: string,
-  viewport: ViewState
+  viewState: ViewState
 ): Promise<SerperResponse> => {
   const data = {
     q: query,
-    ll: `@${viewport.latitude},${viewport.longitude},${viewport.zoom}z`,
+    ll: `@${viewState.latitude},${viewState.longitude},${viewState.zoom}z`,
   };
 
   const response = await fetch('https://google.serper.dev/maps', {
@@ -29,25 +29,25 @@ const searchPlaces = async (
   return response.json();
 };
 
-export const useSearchPlaces = (query: string, viewport: ViewState) => {
-  const { saveLayer } = useMapStore();
+export const useSearchPlaces = (query: string) => {
+  const { saveLayer, viewState } = useMapStore();
   const placesQuery = useQuery({
-    queryKey: ['searchPlaces', query, viewport],
-    queryFn: () => searchPlaces(query, viewport),
+    queryKey: ['searchPlaces', query, viewState],
+    queryFn: () => searchPlaces(query, viewState),
     enabled: false,
     staleTime: 5 * 60 * 1000,
   });
 
   useEffect(() => {
     if (placesQuery.data && !placesQuery.isFetching) {
-      console.log('saving layer', query, placesQuery.data.places);
+      console.log('saving layer', Date.now(), query, placesQuery.data.places);
       saveLayer(query, placesQuery.data.places);
     }
 
     if (placesQuery.isFetching) {
       console.log('fetching places', query);
     }
-  }, [placesQuery.data, placesQuery.isFetching, saveLayer, query]);
+  }, [placesQuery.data, placesQuery.isFetching, query, saveLayer]);
 
   return placesQuery;
 };

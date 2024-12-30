@@ -21,6 +21,7 @@ import { getBbox } from '../utils';
 import { useSearchPlaces } from '../hooks/useSearchPlaces';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useMapStore } from '../stores/mapStore';
+import Sidebar from './Sidebar';
 
 const INITIAL_VIEWSTATE: ViewState = {
   latitude: 34.04162072763611,
@@ -95,7 +96,7 @@ const MapCenter = () => {
       } else if (e.metaKey && e.key === 'k') {
         updateSearchInputFocused(true);
       } else if (e.key === 'Enter') {
-        if (searchTerm !== '') {
+        if (searchTerm !== '' && !isFetching) {
           refetch();
         }
       }
@@ -175,12 +176,12 @@ const MapCenter = () => {
           {/* <div className='absolute top-0 left-0 flex justify-center items-center p-4 border border-red-500 bg-gray-900/50'>
             <p className='text-white'>Test</p>
           </div> */}
-          <SearchBar />
+          {/* <SearchBar /> */}
           <UserLocationMarker userLocation={userLocation} />
         </Map>
       </div>
-      <SearchBar />
-
+      {/* <SearchBar /> */}
+      <Sidebar />
       {/* <MapOverlay {...MapOverlayProps} /> */}
       {/* <DebugOverlay title='User Location' message={userLocation.error} /> */}
     </>
